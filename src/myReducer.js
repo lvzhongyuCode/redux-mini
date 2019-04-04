@@ -1,4 +1,4 @@
-export function counter(state = 10, action) {
+export function counter(state = 0, action) {
   console.log(action.type)
   switch (action.type) {
     case "ADD_GUN": return state + 1
