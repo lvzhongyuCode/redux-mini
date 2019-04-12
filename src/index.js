@@ -8,12 +8,14 @@ import thunk from 'redux-thunk';
 
 
 
-import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-const store = createStore(counter,applyMiddleware(thunk))
-// import { createStore } from './myredux';
+// import { createStore, applyMiddleware } from 'redux';
+// import { Provider } from 'react-redux';
+
+import { createStore } from './myredux';
 // import { applyMiddleware } from 'redux';
-// import { Provider } from './myReactRedux';
+import { applyMiddleware } from './myredux';
+import { Provider } from './myReactRedux';
+const store = createStore(counter,applyMiddleware(thunk))
 // const store = createStore(counter)
 
 ReactDOM.render(

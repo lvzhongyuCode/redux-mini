@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import { connect } from './myReactRedux';
-import { connect } from 'react-redux';
+import { connect } from './myReactRedux';
+// import { connect } from 'react-redux';
 import {addGun, removeGun, addGunSync} from './myReducer';
 
 class App extends Component {

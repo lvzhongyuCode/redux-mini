@@ -1,54 +1,57 @@
+
+
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+// import { bindActionCreators } from 'redux';
 import { bindActionCreators } from './myredux';
 
-const connect = (mapStateToPorps,mapDispatchToProps) => (WrapComponent) => {
-  return class ConnectComponent extends Component{
-    static contextTypes = {
-      store: PropTypes.object
+export class Provider extends Component{
+  constructor(props) {
+    super(props)
+  }
+  static childContextTypes = {
+    store: PropTypes.object
+  }
+  getChildContext() {
+    return {
+      store: this.props.store
     }
-    constructor(props, context) {
-      super(props, context)
+  }
+  render() {
+    return this.props.children
+  }
+}
+
+export const connect = (mapStateToProps, mapDispatchToProps) => (WrapComponent) => {
+  return class ConnectComponent extends Component{
+    constructor(props) {
+      super(props)
       this.state = {
         props: {}
       }
     }
-    componentDidMount() {
+    componentDidMount(){
       const { store } = this.context
-      store.subscribe(this.update.bind(this))
       this.update()
+      store.subscribe(() => {this.update()})
     }
-    update() {
-      const {store} = this.context
-      const dispatchProps = bindActionCreators(mapDispatchToProps,store.dispatch)
-      const stateProps = mapStateToPorps(store.getState())
+    update(){
+      const { store } = this.context
+      let stateProps = mapStateToProps(store.getState())
+      let dispatchProps = bindActionCreators(mapDispatchToProps, store.dispatch)
       this.setState({
         props: {
-          ...dispatchProps,
           ...this.state.props,
+          ...dispatchProps,
           ...stateProps
         }
       })
+    }
+    static contextTypes = {
+      store: PropTypes.object
     }
     render() {
       return <WrapComponent {...this.state.props}></WrapComponent>
     }
   }
 }
-
-class Provider extends Component {
-  static childContextTypes = {
-    store: PropTypes.object
-  }
-  constructor(props, context) {
-    super(props,context)
-    this.store = props.store
-  }
-  getChildContext() {
-    return {store: this.store}
-  }
-  render() {
-    return this.props.children
-  }
-}
-export { Provider, connect }
